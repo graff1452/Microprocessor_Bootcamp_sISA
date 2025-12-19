@@ -18,8 +18,15 @@ Course/
 ├── emulator/ # Golden model + comparison tools
 ├── rtl/ # Verilog RTL (used by Verilator)
 ├── run.py # RTL simulation script
+|── test/ # testbenches
 
 ---
+
+first of all, do not forget to change some filepathes in some files:
+- Course/sCPU_final/emulator/compare.cpp
+- Course/sCPU_final/emulator/main.cpp
+- Course/sCPU_final/test/top/top_tb.cpp
+- Course/sCPU_final/rtl/instruction_memory.v
 
 ## 1. Navigate to the Project Root
 
