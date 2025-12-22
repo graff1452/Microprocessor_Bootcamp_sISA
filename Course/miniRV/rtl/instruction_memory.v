@@ -3,7 +3,7 @@ module instruction_memory (
     output wire [31:0] instruction
 );
     // 16,777,216 instructions × 32 bits = 16 MB
-    reg [31:0] rom [0:16,777,215];
+    reg [31:0] rom [0:16777215];
 
     wire [23:0] instr_index;
     assign instr_index = pc[25:2];  // pc >> 2
@@ -12,6 +12,6 @@ module instruction_memory (
     assign instruction = rom[instr_index];
 
     initial begin
-        $readmemh("", rom);
+        $readmemh("/home/graff145/Desktop/Microprocessor_Bootcamp_sISA/Course/miniRV/instructions/instruction.txt", rom);
     end
 endmodule

@@ -1,5 +1,5 @@
 module data_memory #(
-    parameter integer ADDR_BITS = 24  // 2^12 bytes = 4096 bytes default
+    parameter integer ADDR_BITS = 26  // 2^26 bytes
 )(
     input  wire [31:0] addr,
     input  wire [31:0] write_data,

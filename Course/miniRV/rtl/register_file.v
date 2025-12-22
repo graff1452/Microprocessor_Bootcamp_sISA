@@ -64,7 +64,7 @@ module register_file
     register_32bits register_32bits_0 
     (
         .D(32'd0),
-        .enable((rd_addr == 4'd0) && reg_write),
+        .enable((rd_addr == 5'd0) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_0_reg_out)
@@ -73,7 +73,7 @@ module register_file
     register_32bits register_32bits_1 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd1) && reg_write),
+        .enable((rd_addr == 5'd1) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_1_reg_out)
@@ -82,7 +82,7 @@ module register_file
     register_32bits register_32bits_2
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd2) && reg_write),
+        .enable((rd_addr == 5'd2) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_2_reg_out)
@@ -91,7 +91,7 @@ module register_file
     register_32bits register_32bits_3
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd3) && reg_write),
+        .enable((rd_addr == 5'd3) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_3_reg_out)
@@ -100,7 +100,7 @@ module register_file
     register_32bits register_32bits_4 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd4) && reg_write),
+        .enable((rd_addr == 5'd4) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_4_reg_out)
@@ -109,7 +109,7 @@ module register_file
     register_32bits register_32bits_5
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd5) && reg_write),
+        .enable((rd_addr == 5'd5) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_5_reg_out)
@@ -118,7 +118,7 @@ module register_file
     register_32bits register_32bits_6 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd6) && reg_write),
+        .enable((rd_addr == 5'd6) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_6_reg_out)
@@ -127,7 +127,7 @@ module register_file
     register_32bits register_32bits_7 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd7) && reg_write),
+        .enable((rd_addr == 5'd7) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_7_reg_out)
@@ -136,7 +136,7 @@ module register_file
     register_32bits register_32bits_8 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd8) && reg_write),
+        .enable((rd_addr == 5'd8) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_8_reg_out)
@@ -145,7 +145,7 @@ module register_file
     register_32bits register_32bits_9 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd9) && reg_write),
+        .enable((rd_addr == 5'd9) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_9_reg_out)
@@ -154,7 +154,7 @@ module register_file
     register_32bits register_32bits_10 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd10) && reg_write),
+        .enable((rd_addr == 5'd10) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_10_reg_out)
@@ -163,7 +163,7 @@ module register_file
     register_32bits register_32bits_11 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd11) && reg_write),
+        .enable((rd_addr == 5'd11) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_11_reg_out)
@@ -172,7 +172,7 @@ module register_file
     register_32bits register_32bits_12 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd12) && reg_write),
+        .enable((rd_addr == 5'd12) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_12_reg_out)
@@ -181,7 +181,7 @@ module register_file
     register_32bits register_32bits_13 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd13) && reg_write),
+        .enable((rd_addr == 5'd13) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_13_reg_out)
@@ -190,7 +190,7 @@ module register_file
     register_32bits register_32bits_14 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd14) && reg_write),
+        .enable((rd_addr == 5'd14) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_14_reg_out)
@@ -199,7 +199,7 @@ module register_file
     register_32bits register_32bits_15 
     (
         .D(rd_data),
-        .enable((rd_addr == 4'd15) && reg_write),
+        .enable((rd_addr == 5'd15) && reg_write),
         .clk(clk),
         .rst(rst),
         .reg_out(wire_register_32bits_15_reg_out)
