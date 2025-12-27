@@ -1,7 +1,9 @@
-module data_memory #(
-    parameter integer ADDR_BITS = 26  // 2^26 bytes
+module data_memory#(
+    // number of WORD index bits (not bytes)
+    // DEPTH_WORDS = 2^WORD_BITS words => bytes = 2^(WORD_BITS+2)
+    parameter integer WORD_BITS = 25
 )(
-    input  wire [31:0] addr,
+    input  wire [31:0] addr,        // byte address
     input  wire [31:0] write_data,
     input  wire        sw,
     input  wire        sb,
@@ -11,49 +13,45 @@ module data_memory #(
     output wire [31:0] read_data
 );
 
-    localparam integer DEPTH = (1 << ADDR_BITS);
+    localparam integer DEPTH_WORDS = (1 << WORD_BITS);
 
-    reg [7:0] ram0 [0:DEPTH-1];
-    reg [7:0] ram1 [0:DEPTH-1];
-    reg [7:0] ram2 [0:DEPTH-1];
-    reg [7:0] ram3 [0:DEPTH-1];
+    reg [31:0] mem [0:DEPTH_WORDS-1];
 
-    wire [ADDR_BITS-1:0] a = addr[ADDR_BITS-1:0];
-    // for store
+    initial begin
+        $readmemh("/home/graff145/Desktop/Microprocessor_Bootcamp_sISA/Course/miniRV/instructions/instruction.txt", mem);
+    end
+
+    // Word index and byte offset within the word
+    wire [WORD_BITS-1:0] widx   = addr[WORD_BITS+1:2]; // == (addr >> 2)
+    wire [1:0]           boff   = addr[1:0];
+
+    // Current word (combinational read)
+    wire [31:0] cur_word = mem[widx];
+
+    // -------- STORE (sync) --------
     always @(posedge clk) begin
-        if (sw) 
-        begin
-            ram0[a + 0] <= write_data[7:0];
-            ram1[a + 1] <= write_data[15:8];
-            ram2[a + 2] <= write_data[23:16];
-            ram3[a + 3] <= write_data[31:24];
-        end
-        else if (sb) 
-        begin
-            case (addr[1:0])
-                2'b00: ram0[a] <= write_data[7:0];
-                2'b01: ram1[a] <= write_data[7:0];
-                2'b10: ram2[a] <= write_data[7:0];
-                2'b11: ram3[a] <= write_data[7:0];
+        if (sw) begin
+            mem[widx] <= write_data;
+        end else if (sb) begin
+            case (boff)
+                2'b00: mem[widx] <= {cur_word[31:8],  write_data[7:0]};
+                2'b01: mem[widx] <= {cur_word[31:16], write_data[7:0], cur_word[7:0]};
+                2'b10: mem[widx] <= {cur_word[31:24], write_data[7:0], cur_word[15:0]};
+                2'b11: mem[widx] <= {write_data[7:0], cur_word[23:0]};
             endcase
         end
     end
 
-    // for load
-    wire [7:0] byte0 = ram0[a + 0];
-    wire [7:0] byte1 = ram1[a + 1];
-    wire [7:0] byte2 = ram2[a + 2];
-    wire [7:0] byte3 = ram3[a + 3];
-
-    wire [31:0] lw_word = {byte3, byte2, byte1, byte0};
-
+    // -------- LOAD (combinational) --------
     wire [7:0] sel_byte =
-        (addr[1:0] == 2'b00) ? ram0[a] :
-        (addr[1:0] == 2'b01) ? ram1[a] :
-        (addr[1:0] == 2'b10) ? ram2[a] :
-                               ram3[a];
+        (boff == 2'b00) ? cur_word[7:0]   :
+        (boff == 2'b01) ? cur_word[15:8]  :
+        (boff == 2'b10) ? cur_word[23:16] :
+                          cur_word[31:24];
 
-    assign  read_data = lw  ? lw_word           : 
-                        lbu ? {24'b0, sel_byte} : 
-                        32'b0;
+    assign read_data =
+        lw  ? cur_word            :
+        lbu ? {24'b0, sel_byte}   :
+              32'b0;
+
 endmodule

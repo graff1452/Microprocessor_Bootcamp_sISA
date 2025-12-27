@@ -6,7 +6,7 @@
 #include "Vtop.h"
 #include <filesystem>
 
-#define NUM_CYCLES 15
+#define NUM_CYCLES 6000
 
 static void tick(Vtop* dut)
 {
@@ -21,26 +21,26 @@ int main(int argc, char** argv)
     Verilated::commandArgs(argc, argv);
     Vtop* top = new Vtop;
 
-    // std::ofstream pcOutFile(std::filesystem::current_path() / "emulator" / "txt" / "top_module_pc.txt");
-    // if (!pcOutFile.is_open()) 
-    // {
-    //     std::cerr << "Error: Could not open file golden_model_pc.txt for writing." << std::endl;
-    //     return 1;
-    // }
+    std::ofstream pcOutFile(std::filesystem::current_path() / "emulator" / "txt" / "top_module_pc.txt");
+    if (!pcOutFile.is_open()) 
+    {
+        std::cerr << "Error: Could not open file golden_model_pc.txt for writing." << std::endl;
+        return 1;
+    }
 
-    // std::ofstream registerOutFile(std::filesystem::current_path() / "emulator" / "txt" / "top_module_register.txt");
-    // if (!registerOutFile.is_open()) 
-    // {
-    //     std::cerr << "Error: Could not open file golden_model_instruction.txt for writing." << std::endl;
-    //     return 1;
-    // }
+    std::ofstream registerOutFile(std::filesystem::current_path() / "emulator" / "txt" / "top_module_register.txt");
+    if (!registerOutFile.is_open()) 
+    {
+        std::cerr << "Error: Could not open file golden_model_instruction.txt for writing." << std::endl;
+        return 1;
+    }
 
-    // std::ofstream instructionOutFile(std::filesystem::current_path() / "emulator" / "txt" / "top_module_instruction.txt");
-    // if (!instructionOutFile.is_open()) 
-    // {
-    //     std::cerr << "Error: Could not open file golden_model_register.txt for writing." << std::endl;
-    //     return 1;
-    // }
+    std::ofstream instructionOutFile(std::filesystem::current_path() / "emulator" / "txt" / "top_module_instruction.txt");
+    if (!instructionOutFile.is_open()) 
+    {
+        std::cerr << "Error: Could not open file golden_model_register.txt for writing." << std::endl;
+        return 1;
+    }
 
     top->clk = 0;
     top->rst = 1;
@@ -54,24 +54,24 @@ int main(int argc, char** argv)
 
     for (int cycle = 0; cycle < NUM_CYCLES; cycle++)
     {
-        // instructionOutFile << std::bitset<32>(top->instruction);
-        // registerOutFile << std::bitset<32>(top->reg0_val);
-        // registerOutFile << std::bitset<32>(top->reg1_val);
-        // registerOutFile << std::bitset<32>(top->reg2_val);
-        // registerOutFile << std::bitset<32>(top->reg3_val);
-        // registerOutFile << std::bitset<32>(top->reg4_val);
-        // registerOutFile << std::bitset<32>(top->reg5_val);
-        // registerOutFile << std::bitset<32>(top->reg6_val);
-        // registerOutFile << std::bitset<32>(top->reg7_val);
-        // registerOutFile << std::bitset<32>(top->reg8_val);
-        // registerOutFile << std::bitset<32>(top->reg9_val);
-        // registerOutFile << std::bitset<32>(top->reg10_val);
-        // registerOutFile << std::bitset<32>(top->reg11_val);
-        // registerOutFile << std::bitset<32>(top->reg12_val);
-        // registerOutFile << std::bitset<32>(top->reg13_val);
-        // registerOutFile << std::bitset<32>(top->reg14_val);
-        // registerOutFile << std::bitset<32>(top->reg15_val);
-        // pcOutFile << std::bitset<32>(top->pc_out);
+        instructionOutFile << std::bitset<32>(top->instruction);
+        registerOutFile << std::bitset<32>(top->reg0_val);
+        registerOutFile << std::bitset<32>(top->reg1_val);
+        registerOutFile << std::bitset<32>(top->reg2_val);
+        registerOutFile << std::bitset<32>(top->reg3_val);
+        registerOutFile << std::bitset<32>(top->reg4_val);
+        registerOutFile << std::bitset<32>(top->reg5_val);
+        registerOutFile << std::bitset<32>(top->reg6_val);
+        registerOutFile << std::bitset<32>(top->reg7_val);
+        registerOutFile << std::bitset<32>(top->reg8_val);
+        registerOutFile << std::bitset<32>(top->reg9_val);
+        registerOutFile << std::bitset<32>(top->reg10_val);
+        registerOutFile << std::bitset<32>(top->reg11_val);
+        registerOutFile << std::bitset<32>(top->reg12_val);
+        registerOutFile << std::bitset<32>(top->reg13_val);
+        registerOutFile << std::bitset<32>(top->reg14_val);
+        registerOutFile << std::bitset<32>(top->reg15_val);
+        pcOutFile << std::bitset<32>(top->pc_out);
         std::cout
             << "Cycle " << cycle << "\n"
 
@@ -155,9 +155,9 @@ int main(int argc, char** argv)
         if (Verilated::gotFinish())
             break;
     }
-    // pcOutFile.close();
-    // registerOutFile.close();
-    // instructionOutFile.close();
+    pcOutFile.close();
+    registerOutFile.close();
+    instructionOutFile.close();
     std::cout << "top Testbench completed." << std::endl;
     delete top;
     return 0;

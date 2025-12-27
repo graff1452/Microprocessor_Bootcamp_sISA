@@ -12,8 +12,8 @@
 #include "minirv_emulator.h"
 
 // ----------------------- CONFIG -----------------------
-#define NUM_INST   142014
-#define NUM_TESTS  142014
+#define NUM_INST   6000
+#define NUM_TESTS  6000
 // ------------------------------------------------------
 
 static void Print32(const std::string& label, uint32_t v) {
@@ -93,36 +93,36 @@ int main() {
             uint32_t pc = emulator.GetPCValue();
             uint32_t inst = emulator.GetInstructionMemoryValue(pc);
 
-            // std::cout << "Cycle:\t\t" << std::dec << cycle << "\n";
-            // Print32("PC", pc);
-            // Print32("Instruction", inst);
-            // std::cout << "Operation:\t" << DecodeOpName(inst) << "\n";
+            std::cout << "Cycle:\t\t" << std::dec << cycle << "\n";
+            Print32("PC", pc);
+            Print32("Instruction", inst);
+            std::cout << "Operation:\t" << DecodeOpName(inst) << "\n";
 
-            // // Show decoded fields (RV32)
-            // uint32_t opcode = inst & 0x7F;
-            // uint32_t rd     = (inst >> 7)  & 0x1F;
-            // uint32_t funct3 = (inst >> 12) & 0x7;
-            // uint32_t rs1    = (inst >> 15) & 0x1F;
-            // uint32_t rs2    = (inst >> 20) & 0x1F;
-            // uint32_t funct7 = (inst >> 25) & 0x7F;
+            // Show decoded fields (RV32)
+            uint32_t opcode = inst & 0x7F;
+            uint32_t rd     = (inst >> 7)  & 0x1F;
+            uint32_t funct3 = (inst >> 12) & 0x7;
+            uint32_t rs1    = (inst >> 15) & 0x1F;
+            uint32_t rs2    = (inst >> 20) & 0x1F;
+            uint32_t funct7 = (inst >> 25) & 0x7F;
 
-            // std::cout << "Fields:\t\t"
-            //           << "opcode=" << std::hex << std::bitset<7>(opcode)
-            //           << " rd=x" << std::dec << rd
-            //           << " rs1=x" << rs1
-            //           << " rs2=x" << rs2
-            //           << " funct3=0x" << std::hex << funct3
-            //           << " funct7=0x" << funct7
-            //           << std::dec << "\n";
+            std::cout << "Fields:\t\t"
+                      << "opcode=" << std::hex << std::bitset<7>(opcode)
+                      << " rd=x" << std::dec << rd
+                      << " rs1=x" << rs1
+                      << " rs2=x" << rs2
+                      << " funct3=0x" << std::hex << funct3
+                      << " funct7=0x" << funct7
+                      << std::dec << "\n";
 
-            // // Show x0..x15 (your CPU only has 16 regs)
-            // for (int r = 0; r < 16; ++r) {
-            //     uint32_t rv = emulator.GetRegisterValue(static_cast<uint8_t>(r));
-            //     std::string name = "x" + std::to_string(r);
-            //     Print32(name, rv);
-            // }
+            // Show x0..x15 (your CPU only has 16 regs)
+            for (int r = 0; r < 16; ++r) {
+                uint32_t rv = emulator.GetRegisterValue(static_cast<uint8_t>(r));
+                std::string name = "x" + std::to_string(r);
+                Print32(name, rv);
+            }
 
-            // std::cout << "----------------------------------------\n";
+            std::cout << "----------------------------------------\n";
 
             instructionOutFile << std::bitset<32>(inst);
             registerOutFile << std::bitset<32>(emulator.GetRegisterValue(0));
