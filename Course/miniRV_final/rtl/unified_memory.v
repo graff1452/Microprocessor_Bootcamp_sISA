@@ -27,6 +27,15 @@ module unified_memory #(
     wire d_in_range = (d_addr >= BASE_ADDR) && (d_off + 32'd3 < MEM_BYTES);
 
     // -----------------------------
+    // UART MMIO
+    // -----------------------------
+    localparam [31:0] UART_DATA   = 32'h1000_0000;  // write: TX data (low byte)
+    localparam [31:0] UART_STATUS = 32'h1000_0004;  // read: bit0=ready (1), busy (0)
+
+    reg uart_ready;
+    initial uart_ready = 1'b1;   // ready at reset/start of sim
+
+    // -----------------------------
     // Combinational READS
     // -----------------------------
     // Instruction fetch: 32-bit little-endian
@@ -34,25 +43,33 @@ module unified_memory #(
         ? { mem[i_off + 32'd3], mem[i_off + 32'd2], mem[i_off + 32'd1], mem[i_off + 32'd0] }
         : 32'h0000_0000;
 
-    // Data read: always returns the 32-bit word containing d_addr..d_addr+3 (little-endian)
-    assign d_rdata = d_in_range
-        ? { mem[d_off + 32'd3], mem[d_off + 32'd2], mem[d_off + 32'd1], mem[d_off + 32'd0] }
-        : 32'h0000_0000;
+    // Data read:
+    // - UART_STATUS returns {31'b0, uart_ready}
+    // - Otherwise return 32-bit little-endian word from RAM if in range
+    assign d_rdata =
+        (d_addr == UART_STATUS) ? {31'b0, uart_ready} :
+        d_in_range ? { mem[d_off + 32'd3], mem[d_off + 32'd2], mem[d_off + 32'd1], mem[d_off + 32'd0] } :
+        32'h0000_0000;
 
     // -----------------------------
     // Synchronous WRITES (byte strobes)
     // -----------------------------
-    always @(posedge clk) 
-    begin
-        if (d_we) 
-        begin
-            if (d_addr == 32'h1000_0000) 
-            begin
-            // UART TX: output one byte, do not touch mem[]
-                $write("%c", d_wdata[7:0]);
-            end 
-            else if (d_in_range) 
-            begin
+    always @(posedge clk) begin
+        // Simple UART model:
+        // After a successful TX write, become busy for 1 cycle, then ready again.
+        if (!uart_ready) begin
+            uart_ready <= 1'b1;
+        end
+
+        if (d_we) begin
+            if (d_addr == UART_DATA) begin
+                if (uart_ready) begin
+                    // UART TX: output one byte, do not touch mem[]
+                    $write("%c", d_wdata[7:0]);
+                    uart_ready <= 1'b0;  // busy for 1 cycle
+                end
+                // If busy, ignore the write (software should poll and retry)
+            end else if (d_in_range) begin
                 // Normal RAM write with byte strobes
                 if (d_wstrb[0]) mem[d_off + 32'd0] <= d_wdata[7:0];
                 if (d_wstrb[1]) mem[d_off + 32'd1] <= d_wdata[15:8];
@@ -61,6 +78,5 @@ module unified_memory #(
             end
         end
     end
-
 
 endmodule
