@@ -267,7 +267,9 @@ bool minirvEmulator::LoadInstructionMemoryFromFile(const std::string& filename, 
             std::cerr << "Instruction memory overflow at word index: " << idx << "\n";
             break;
         }
-        instruction_memory_[idx++] = word;
+        instruction_memory_[idx] = word;
+        data_memory_[idx] = word;
+        idx++;
     }
     return true;
 }

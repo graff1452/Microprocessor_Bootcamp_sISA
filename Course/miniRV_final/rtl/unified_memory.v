@@ -42,13 +42,25 @@ module unified_memory #(
     // -----------------------------
     // Synchronous WRITES (byte strobes)
     // -----------------------------
-    always @(posedge clk) begin
-        if (d_we && d_in_range) begin
-            if (d_wstrb[0]) mem[d_off + 32'd0] <= d_wdata[7:0];
-            if (d_wstrb[1]) mem[d_off + 32'd1] <= d_wdata[15:8];
-            if (d_wstrb[2]) mem[d_off + 32'd2] <= d_wdata[23:16];
-            if (d_wstrb[3]) mem[d_off + 32'd3] <= d_wdata[31:24];
+    always @(posedge clk) 
+    begin
+        if (d_we) 
+        begin
+            if (d_addr == 32'h1000_0000) 
+            begin
+            // UART TX: output one byte, do not touch mem[]
+                $write("%c", d_wdata[7:0]);
+            end 
+            else if (d_in_range) 
+            begin
+                // Normal RAM write with byte strobes
+                if (d_wstrb[0]) mem[d_off + 32'd0] <= d_wdata[7:0];
+                if (d_wstrb[1]) mem[d_off + 32'd1] <= d_wdata[15:8];
+                if (d_wstrb[2]) mem[d_off + 32'd2] <= d_wdata[23:16];
+                if (d_wstrb[3]) mem[d_off + 32'd3] <= d_wdata[31:24];
+            end
         end
     end
+
 
 endmodule
